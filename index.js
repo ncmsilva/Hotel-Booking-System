@@ -1,12 +1,38 @@
 import express from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
+import JWT from "jsonwebtoken"
 
 dotenv.config();
 const app = express()
 
 const conn_str = process.env.mongo_con_str;
 console.log(conn_str)
+
+app.use((req,res,next) =>
+    {
+        const token = req.header("Authorization")?.replace("Bearer ", "")
+        const JWT_key = process.env.JWT_key
+
+        if(!token)
+        {
+            JWT.verify(token,JWT_key, (err, decorded)=>{
+                if(!decorded)
+                {
+                    req.user = decorded
+                    next()
+                }
+                else
+                {
+                    next()
+                }
+            })
+        }
+        else
+        {
+            next()
+        }
+    })
 
 mongoose.connect(conn_str).then(
     ()=>{
