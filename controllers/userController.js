@@ -20,7 +20,7 @@ export function loginUser(req,res)
                     email: spuser.email,
                     Fname: spuser.firstName,
                     Lname: spuser.lastName,
-                    role: spuser.type,
+                    type: spuser.type,
                 }, process.env.JWT_key, {
                     expiresIn: "5m"
                 })
