@@ -2,9 +2,13 @@ import express from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
 import JWT from "jsonwebtoken"
+import userRoute from "./routes/userRoute.js"
+import bodyParser from "body-parser"
 
 dotenv.config();
 const app = express()
+
+app.use(bodyParser.json())
 
 const conn_str = process.env.mongo_con_str;
 console.log(conn_str)
@@ -43,6 +47,8 @@ mongoose.connect(conn_str).then(
         console.log(`Connection fail message ${err}`)
     }
 )
+
+app.use("/api/users",userRoute)
 
 app.listen(5002,(req,res)=>
 {
