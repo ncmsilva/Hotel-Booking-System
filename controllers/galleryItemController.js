@@ -41,10 +41,12 @@ export function GetGalleryItemById(req, res)
     {
         if(validateAdmin(req))
         {
-            const catId = req.params.id
-            galleryItem.findById({_id: catId}).then(function(item)
+            galleryItem.findById({_id: req.params.id}).then(function(item)
             {
                 res.status(200).json(item);
+            }).catch(function(err)
+            {
+                res.status(400).json(err);
             });
         }
         else
@@ -60,13 +62,17 @@ export function GetGalleryItemById(req, res)
 }
 export function UpdateGalleryItem(req, res)
 {
+    console.log("UpdateGalleryItem")
     if(req.user)
     {
         if(validateAdmin(req))
         {
             galleryItem.findByIdAndUpdate(req.params.id, req.body).then(function(item)
             {
-                res.status(200).json(item);
+                GetGalleryItemById(req, res)
+            }).catch(function(err)
+            {
+                res.status(400).json(err);
             });
         }
     }
@@ -81,9 +87,12 @@ export function DeleteGalleryItem(req, res)
     {
         if(validateAdmin(req))
         {
-            galleryItem.findByIdAndRemove(req.params.id).then(function(item)
+            galleryItem.findByIdAndDelete(req.params.id).then(function(item)
             {
-                res.status(200).json(item);
+                res.status(200).json({"status" :"successfull", "id": req.params.id});
+            }).catch(function(err)
+            {
+                res.status(400).json(err);
             });
         }
     }
