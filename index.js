@@ -5,6 +5,7 @@ import JWT from "jsonwebtoken"
 import userRoute from "./routes/userRoute.js"
 import galleryItemRouter from "./routes/galleryItemRoute.js"
 import bodyParser from "body-parser"
+import CategoryRoute from "./routes/categoryRoute.js"
 
 dotenv.config();
 const app = express()
@@ -18,7 +19,7 @@ app.use((req,res,next)=>{
 
     const token = req.header("Authorization")?.replace("Bearer ", "")
     const JWT_key = process.env.JWT_key
-
+    
         if(token)
         {
             JWT.verify(token,JWT_key, (err, decorded)=>{
@@ -51,6 +52,7 @@ mongoose.connect(conn_str).then(
 
 app.use("/api/users",userRoute)
 app.use("/api/galleryItems", galleryItemRouter)
+app.use("/api/category", CategoryRoute)
 
 app.listen(5002,(req,res)=>
 {

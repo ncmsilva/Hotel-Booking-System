@@ -22,13 +22,13 @@ export function loginUser(req,res)
                     Lname: spuser.lastName,
                     type: spuser.type,
                 }, process.env.JWT_key, {
-                    expiresIn: "5m"
+                    expiresIn: "30m"
                 })
                 res.status(201).json(
                     {
                         "status": "success",
                         "token": token,
-                        "expireIn" : 300
+                        "expireIn" : 9000
                     });
             }
             else
