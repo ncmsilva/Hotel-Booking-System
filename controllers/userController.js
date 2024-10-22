@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt"
 import User from "../models/user.js"
 import Jwt from "jsonwebtoken"
+import { validateAdmin } from "../utils/UserUtils.js";
 
 export function loginUser(req,res)
 {
@@ -67,42 +68,5 @@ export function createUser(req, res)
 export function putUsers(req,res)
 {
     
-}
-export function validateAdmin(req)
-{
-    if(req.user)
-    {
-        if(req.user.type== "admin")
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
-}
-
-export function validateCustomer(req)
-{
-    if(req.user)
-    {
-        if(req.user.type== "customer")
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
 }
 

@@ -1,5 +1,5 @@
 import category from "../models/category.js";
-import { validateAdmin } from "./userController.js";
+import { validateAdmin } from "../utils/UserUtils.js";
 
 export function createCategory(req,res)
 {
@@ -65,7 +65,9 @@ export function UpdateCategory(req, res)
     {
         if(validateAdmin(req))
         {
-            category.findByIdAndUpdate(req.params.id, req.body).then(function(item)
+            const data = req.body;
+            delete data.name
+            category.findByIdAndUpdate(req.params.id, data).then(function(item)
             {
                 getCategoryById(req, res)
             }).catch(function(err)

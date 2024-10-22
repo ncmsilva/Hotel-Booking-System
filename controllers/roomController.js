@@ -1,5 +1,5 @@
 import Room from "../models/Room.js";
-import { validateAdmin } from "./userController.js";
+import { validateAdmin } from "../utils/UserUtils.js";
 
 export function createRoom(req,res)
 {
@@ -39,20 +39,13 @@ export function getRoomById(req,res)
 {
     if(req.user)
         {
-            if(validateAdmin(req))
+            Room.findById(req.params.id) .then(function(item)
             {
-                Room.findById(req.params.id) .then(function(item)
-                {
-                    res.status(200).json(item);
-                }).catch(function(err)
-                {
-                    res.status(400).json(err);
-                });
-            }
-            else
+                res.status(200).json(item);
+            }).catch(function(err)
             {
-                res.status(401).json("You are not Autherize to use this API.");
-            }
+                res.status(400).json(err);
+            });
         }
         else
         {

@@ -1,5 +1,5 @@
 import galleryItem from "../models/galleryItem.js";
-import { validateAdmin } from "./userController.js";
+import { validateAdmin } from "../utils/UserUtils.js";
 
 export function AddGalleryItem(req, res)
 {
