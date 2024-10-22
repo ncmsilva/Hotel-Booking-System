@@ -1,13 +1,13 @@
-import Room from "../models/Room.js";
 import { validateAdmin } from "./userController.js";
+import Booking from "../models/booking.js";
 
-export function createRoom(req,res)
+export function createBooking(req,res)
 {
     if(req.user)
     {
         if(validateAdmin(req))
         {
-            Room.create(req.body).then(function(item)
+            Booking.create(req.body).then(function(item)
             {
                 res.status(200).json(item);
             }).catch(function(err)
@@ -25,9 +25,9 @@ export function createRoom(req,res)
         res.status(401).json("You are not Autherize to use this API.");
     }
 }
-export function getRooms(req,res)
+export function getBookings(req,res)
 {
-    Room.find({},"_id roomId category").then(function(items)
+    Booking.find({},"_id bookingId roomId start end").then(function(items)
     {
         res.status(200).json(items);
     }).catch(function(err)
@@ -35,13 +35,13 @@ export function getRooms(req,res)
         res.status(400).json(err);
     });
 }
-export function getRoomById(req,res)
+export function getBookingById(req,res)
 {
     if(req.user)
         {
             if(validateAdmin(req))
             {
-                Room.findById(req.params.id) .then(function(item)
+                Booking.findById(req.params.id) .then(function(item)
                 {
                     res.status(200).json(item);
                 }).catch(function(err)
@@ -59,15 +59,15 @@ export function getRoomById(req,res)
             res.status(401).json("You are not Autherize to use this API.");
         }
 }
-export function UpdateRoom(req, res)
+export function UpdateBooking(req, res)
 {
     if(req.user)
     {
         if(validateAdmin(req))
         {
-            Room.findByIdAndUpdate(req.params.id, req.body).then(function(item)
+            Booking.findByIdAndUpdate(req.params.id, req.body).then(function(item)
             {
-                getroomById(req, res)
+                getCategoryById(req, res)
             }).catch(function(err)
             {
                 res.status(400).json(err);
@@ -79,13 +79,13 @@ export function UpdateRoom(req, res)
         res.status(401).json("You are not Autherize to use this API.");
     }
 }
-export function DeleteRoom(req, res)
+export function DeleteBooking(req, res)
 {
     if(req.user)
     {
         if(validateAdmin(req))
         {
-            Room.findByIdAndDelete(req.params.id).then(function(item)
+            Booking.findByIdAndDelete(req.params.id).then(function(item)
             {
                 res.status(200).json({"status" :"successfull", "id": req.params.id});
             }).catch(function(err)
@@ -99,28 +99,4 @@ export function DeleteRoom(req, res)
         res.status(401).json("You are not Autherize to use this API.");
     }
     
-}
-export function getRoomsByCategory(req,res)
-{
-    if(req.user)
-        {
-            if(validateAdmin(req))
-            {
-                Room.find({category : req.params.category}) .then(function(item)
-                {
-                    res.status(200).json(item);
-                }).catch(function(err)
-                {
-                    res.status(400).json(err);
-                });
-            }
-            else
-            {
-                res.status(401).json("You are not Autherize to use this API.");
-            }
-        }
-        else
-        {
-            res.status(401).json("You are not Autherize to use this API.");
-        }
 }

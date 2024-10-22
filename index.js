@@ -7,6 +7,7 @@ import galleryItemRouter from "./routes/galleryItemRoute.js"
 import bodyParser from "body-parser"
 import CategoryRoute from "./routes/categoryRoute.js"
 import roomRoute from "./routes/RoomRoute.js"
+import BookingRoute from "./routes/bookingRoute.js"
 
 dotenv.config();
 const app = express()
@@ -55,6 +56,7 @@ app.use("/api/users",userRoute)
 app.use("/api/galleryItems", galleryItemRouter)
 app.use("/api/category", CategoryRoute)
 app.use("/api/room", roomRoute)
+app.use("/api/booking", BookingRoute)
 
 app.listen(5002,(req,res)=>
 {
