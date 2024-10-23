@@ -58,6 +58,8 @@ export function UpdateRoom(req, res)
     {
         if(validateAdmin(req))
         {
+            const data = req.body;
+            delete data.roomId;
             Room.findByIdAndUpdate(req.params.id, req.body).then(function(item)
             {
                 getroomById(req, res)

@@ -1,18 +1,24 @@
-import { validateAdmin } from "../utils/UserUtils.js";
+import { validateAdmin, validateCustomer } from "../utils/UserUtils.js";
 import Booking from "../models/booking.js";
 
 export function createBooking(req,res)
 {
     if(req.user)
     {
-
-        Booking.create(req.body).then(function(item)
+        if(validateCustomer(req))
         {
-            res.status(200).json(item);
-        }).catch(function(err)
+            Booking.create(req.body).then(function(item)
+            {
+                res.status(200).json(item);
+            }).catch(function(err)
+            {
+                res.status(400).json(err);
+            });
+        }
+        else
         {
-            res.status(400).json(err);
-        });
+            res.status(401).json("You are not Autherize to use this API.");
+        }
     }
     else
     {
@@ -21,43 +27,57 @@ export function createBooking(req,res)
 }
 export function getBookings(req,res)
 {
-    Booking.find({},"_id bookingId roomId start end").then(function(items)
-    {
-        res.status(200).json(items);
-    }).catch(function(err)
-    {
-        res.status(400).json(err);
-    });
-}
-export function getBookingById(req,res)
-{
     if(req.user)
+    {
+        if(validateAdmin(req))
         {
-            if(validateAdmin(req))
+            Booking.find({},"_id bookingId roomId start end").then(function(items)
             {
-                Booking.findById(req.params.id) .then(function(item)
-                {
-                    res.status(200).json(item);
-                }).catch(function(err)
-                {
-                    res.status(400).json(err);
-                });
-            }
-            else
+                res.status(200).json(items);
+            }).catch(function(err)
             {
-                res.status(401).json("You are not Autherize to use this API.");
-            }
+                res.status(400).json(err);
+            });
         }
         else
         {
             res.status(401).json("You are not Autherize to use this API.");
         }
+    }
+    else
+    {
+        res.status(401).json("You are not Autherize to use this API.");
+    }
+}
+export function getBookingById(req,res)
+{
+    if(req.user)
+    {
+        if(validateCustomer(req))
+        {
+            Booking.findById(req.params.id) .then(function(item)
+            {
+                res.status(200).json(item);
+            }).catch(function(err)
+            {
+                res.status(400).json(err);
+            });
+        }
+        else
+        {
+            res.status(401).json({ message: 'Unauthorized: Invalid or missing token' });
+        }
+    }
+    else
+    {
+        res.status(401).json("You are not Autherize to use this API.");
+    }
 }
 export function UpdateBooking(req, res)
 {
     if(req.user)
     {
-        if(validateAdmin(req))
+        if(validateCustomer(req))
         {
             Booking.findById(req.params.id) .then(function(item)
             {
@@ -79,8 +99,12 @@ export function UpdateBooking(req, res)
             {
                 res.status(400).json(err);
             });
-            
         }
+        else
+        {
+            res.status(401).json({ message: 'Unauthorized: Invalid or missing token' });
+        }
+
     }
     else
     {
@@ -115,6 +139,10 @@ export function confirmBooking(req, res)
             });
             
         }
+        else
+        {
+            res.status(401).json({ message: 'Unauthorized: Invalid or missing token' });
+        }
     }
     else
     {
@@ -125,20 +153,37 @@ export function DeleteBooking(req, res)
 {
     if(req.user)
     {
-        if(validateAdmin(req))
+        if(validateCustomer(req))
         {
-            Booking.findByIdAndDelete(req.params.id).then(function(item)
+            Booking.findById(req.params.id) .then(function(item)
             {
-                res.status(200).json({"status" :"successfull", "id": req.params.id});
+                //res.status(200).json(item);
+                if(item.status == "pending")
+                {
+                    Booking.findByIdAndDelete(req.params.id).then(function(item)
+                    {
+                        res.status(200).json({"status" :"successfull", "id": req.params.id});
+                    }).catch(function(err)
+                    {
+                        res.status(400).json(err);
+                    });
+                }
+                else{
+                    res.status(400).json({"error" : "Booking can't cancel after it confirmed."});
+                }
             }).catch(function(err)
             {
                 res.status(400).json(err);
             });
         }
+        else
+        {
+            res.status(401).json({ message: 'Unauthorized: Invalid or missing token' });
+        }
     }
     else
     {
-        res.status(401).json("You are not Autherize to use this API.");
+        res.status(403).json("You don't have permission to access this resource.");
     }
     
 }
