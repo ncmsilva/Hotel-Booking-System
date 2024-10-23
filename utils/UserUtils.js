@@ -24,6 +24,10 @@ export function validateCustomer(req)
         {
             return true;
         }
+        else if(req.user.type== "admin")
+            {
+            return true;
+        }
         else
         {
             return false;
