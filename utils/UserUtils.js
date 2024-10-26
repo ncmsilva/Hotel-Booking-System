@@ -24,7 +24,7 @@ export function validateCustomer(req)
         {
             return true;
         }
-        else if(req.user.type== "admin")
+        else if(req.user.type== "admin")//user inheritance admin has customer rights too
             {
             return true;
         }
